@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bloo-refdb
+  labels:
+    app: bloo-refdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bloo-refdb
+  template:
+    metadata:
+      labels:
+        app: bloo-refdb
+    spec:
+      containers:
+        - image: gcr.io/bloo-cloud/bloo-refdb:latest
+          name: bloo-refdb
+          ports:
+            - containerPort: 80
+              name: bloo-r-http
+            - containerPort: 443
+              name: bloo-r-https
+          volumeMounts:
+            - name: bloo-refdb-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: bloo-refdb-storage
+          persistentVolumeClaim:
+            claimName: bloo-refdb-volumeclaim

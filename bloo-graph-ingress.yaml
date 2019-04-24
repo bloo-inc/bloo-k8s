@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: bloo-graph-ingress
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: bloo-ssl-production
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - hosts:
+    - graph.bloo.co
+    secretName: bloo-graph-ssl
+  rules:
+  - host: graph.bloo.co
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: bloo-graph
+          servicePort: 80
